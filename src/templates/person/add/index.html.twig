@@ -1,0 +1,73 @@
+{% extends 'dashboard.html.twig' %}
+
+{% block form %}
+{% if permissions.accountType.parent %}
+<a href="/dashboard/students"><b>Back to students</a>
+  {% if id %}
+      {% if userRoutes|length == 0 %}
+      <a href="#"   data-toggle="modal" data-target="#AddRoute" class="pull-right" >Pick Routes</a>
+      {% endif %}  
+   {% endif %} 
+   
+   <br>
+{{ form_start(form) }}          
+                <div class="row">
+                    <div class="col-md-12"> 
+                      {{ form_row(form.fullname) }}
+                    </div> 
+                     <div class="col-md-6">
+                        {{ form_row(form.email)}}
+                     </div> 
+                     <div class="col-md-6">
+                        {{ form_row(form.phone)}}
+                     </div>  
+                     <div class="col-md-12">
+                        {{ form_row(form.address)}}
+                     </div>   
+                     <div class="col-md-12">
+                        {{ form_row(form.school)}}
+                     </div>
+                     <div class="col-md-12">     	
+                     {% for route in userRoutes %} 
+                     <div class="alert alert-success">
+                       Pick up point <span class="pull-right">{% if route.pickUpFromHome %}Home {% else %} {{route.pickUpPoint}} {% endif %}</span><br>
+                       Pick up time in the morning <span class="pull-right">{{route.pickUpTimeInTheMorning}}</span><br>
+                       Pick up time after school <span class="pull-right">{{route.pickUpTimeAfterSchool}}</span><br>		
+                     <span class="pull-right"><a href="/dashboard/student/route/delete/{{id}}/{{route.id}}">Delete</a></span><br>					
+                    </div>
+                  {% endfor %}
+               </div>
+             </div>
+
+
+ {{ form_end(form) }}
+
+ <div class="modal fade" id="AddRoute" tabindex="-1" role="dialog" aria-labelledby="AddRouteLabel" aria-hidden="true">
+	  <div class="modal-dialog  modal-dialog-centered" role="document">
+		  <div class="modal-content">
+		  <div class="modal-header">
+			  <h5 class="modal-title" id="AddRouteLabel"><b>Add Route</b></h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			  </button>
+		  </div>
+		  <div class="modal-body">      	
+                          {% for route in availableRoutes %} 
+                        <div class="alert alert-success">
+                          Pick up point <span class="pull-right">{% if route.pickUpFromHome %}Home {% else %} {{route.pickUpPoint}} {% endif %}</span><br>
+                          Pick up time in the morning <span class="pull-right">{{route.pickUpTimeInTheMorning}}</span><br>
+                          Pick up time after school <span class="pull-right">{{route.pickUpTimeAfterSchool}}</span><br>		
+                        <span class="pull-right"><a href="/dashboard/route/add/{{id}}/{{route.id}}">Pick</a></span><br>					
+                       </div>
+                     {% endfor %}
+							  
+		  </div>
+		  
+		  </div>
+	  </div>
+</div>
+{% else %}
+{{ include("notauthorized.html.twig") }}
+{% endif %}
+
+{% endblock %}
